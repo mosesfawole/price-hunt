@@ -72,7 +72,7 @@ export default function SearchBar() {
           <button
             type="submit"
             disabled={isLoading || !query.trim()}
-            className="flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0"
+            className="flex items-center gap-1 px-2 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0"
             style={{
               background: query.trim()
                 ? "#00d4aa"
@@ -84,7 +84,7 @@ export default function SearchBar() {
             }}
           >
             {isLoading ? (
-              <div className="w-3 h-3 border-3 border-black border-t-transparent rounded-full animate-spin" />
+              <div className="w-3 h-3 border-2 border-black border-t-transparent rounded-full animate-spin" />
             ) : (
               <>
                 Search <ArrowRight size={12} />
