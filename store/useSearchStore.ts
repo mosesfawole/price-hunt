@@ -73,10 +73,8 @@ export const useSearchStore = create<SearchStore>()(
               ),
             ].slice(0, 8),
           });
-        } catch (err) {
-          const errorMessage =
-            err instanceof Error ? err.message : "Search failed";
-          set({ error: errorMessage, hasSearched: true });
+        } catch (err: any) {
+          set({ error: err.message, hasSearched: true });
         } finally {
           set({ isLoading: false });
         }
