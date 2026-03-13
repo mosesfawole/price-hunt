@@ -46,6 +46,7 @@ export async function GET(req: NextRequest) {
       searchedAt: new Date().toISOString(),
     });
   } catch (err: any) {
+    console.error("[Search Error]", err.message);
     console.error("[Search API Error]", err.message);
 
     // Handle specific SerpAPI errors
