@@ -11,12 +11,7 @@ interface Props {
   highestPrice: number;
 }
 
-export default function ProductCard({
-  product,
-  rank,
-  lowestPrice,
-  highestPrice,
-}: Props) {
+export default function ProductCard({ product, rank, lowestPrice }: Props) {
   const { isDark } = useSearchStore();
   const isBestDeal = rank === 0;
   const priceDiff = product.price - lowestPrice;

@@ -69,13 +69,32 @@ export default function SearchPage() {
                 style={{ color: "#5a5a8a" }}
               >
                 Search any product and instantly compare prices across multiple
-                retailers
+                retailers — Amazon, Walmart, Best Buy and more
               </p>
             </div>
 
             {/* Search bar */}
             <div className="w-full max-w-2xl px-4 animate-slide-up">
               <SearchBar />
+            </div>
+            {/* Disclaimer */}
+            <div className="w-full max-w-2xl px-4 animate-fade-in">
+              <div
+                className="flex items-start gap-2 px-4 py-3 rounded-xl text-xs font-mono"
+                style={{
+                  background: "rgba(240,192,64,0.06)",
+                  border: "1px solid rgba(240,192,64,0.2)",
+                  color: "#5a5a8a",
+                }}
+              >
+                <span style={{ color: "#f0c040", marginTop: "1px" }}>⚠</span>
+                <span>
+                  Results are aggregated from Google Shopping and may include
+                  accessories or related products alongside the item you
+                  searched for. Always verify the product details before
+                  purchasing.
+                </span>
+              </div>
             </div>
 
             {/* Recent searches */}
@@ -194,6 +213,31 @@ export default function SearchPage() {
           </div>
         )}
       </main>
+      {/* Footer */}
+      <footer
+        className="py-6 text-center text-[11px] font-mono"
+        style={{
+          color: "#5a5a8a",
+          borderTop: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
+        }}
+      >
+        © 2026 PriceHunt — Made by{" "}
+        <a
+          href="https://github.com/mosesfawole"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="transition-colors"
+          style={{ color: "#00d4aa" }}
+          onMouseEnter={(e) =>
+            ((e.target as HTMLElement).style.color = "#ffffff")
+          }
+          onMouseLeave={(e) =>
+            ((e.target as HTMLElement).style.color = "#00d4aa")
+          }
+        >
+          Moses Fawole
+        </a>
+      </footer>
     </div>
   );
 }
