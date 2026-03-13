@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
   // Check API key is configured
   if (!process.env.SERPAPI_KEY) {
     return NextResponse.json(
-      { error: "SERPAPI_KEY is not configured" },
+      { error: "Service temporarily unavailable. Please try again later." },
       { status: 500 },
     );
   }
