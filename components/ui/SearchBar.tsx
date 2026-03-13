@@ -27,7 +27,7 @@ export default function SearchBar() {
   const showHistory = focused && history.length > 0 && !query.trim();
 
   return (
-    <div className="relative w-full max-w-2xl mx-auto">
+    <div className="relative w-full max-w-3xl mx-auto">
       <form onSubmit={handleSubmit}>
         <div
           className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all"
@@ -50,7 +50,7 @@ export default function SearchBar() {
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => setFocused(true)}
             onBlur={() => setTimeout(() => setFocused(false), 150)}
-            className="flex-1 bg-transparent outline-none text-sm"
+            className="flex-1 bg-transparent outline-none text-base md:text-sm"
             style={{ color: isDark ? "#ffffff" : "#1a1a2e" }}
           />
 

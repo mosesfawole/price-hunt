@@ -74,7 +74,7 @@ export default function SearchPage() {
             </div>
 
             {/* Search bar */}
-            <div className="w-full max-w-2xl px-4 animate-slide-up">
+            <div className="w-full max-w-3xl px-4 animate-slide-up">
               <SearchBar />
             </div>
             {/* Disclaimer */}
