@@ -20,7 +20,7 @@ export default function ProductCard({
   const { isDark } = useSearchStore();
   const isBestDeal = rank === 0;
   const priceDiff = product.price - lowestPrice;
-  const isExpensive = priceDiff > 0;
+  const isExpensive = priceDiff > 0 && priceDiff <= lowestPrice * 0.5;
 
   return (
     <a
