@@ -39,7 +39,7 @@ export default function SearchBar() {
         >
           <Search
             size={16}
-            style={{ color: focused ? "#00d4aa" : "#5a5a8a", shrink: 0 }}
+            style={{ color: focused ? "#00d4aa" : "#5a5a8a" }}
           />
 
           <input
@@ -56,6 +56,7 @@ export default function SearchBar() {
 
           {query && (
             <button
+              title="clear"
               type="button"
               onClick={() => {
                 setQuery("");

@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
+import { setDefaultResultOrder } from "dns";
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
+setDefaultResultOrder("ipv4first");
+
+const nextConfig: NextConfig = {};
 
 export default nextConfig;

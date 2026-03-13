@@ -35,5 +35,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-// SERPAPI_KEY = process.env.SERPAPI_KEY;

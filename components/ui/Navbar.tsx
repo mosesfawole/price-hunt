@@ -17,7 +17,7 @@ export default function Navbar() {
       {/* Logo */}
       <button
         onClick={clearResults}
-        className="flex items-center gap-2 shrink-0"
+        className="flex items-center gap-2 shrink-0 cursor-pointer"
       >
         <div
           className="w-7 h-7 rounded-lg flex items-center justify-center"
@@ -41,7 +41,7 @@ export default function Navbar() {
       </button>
 
       {/* Right side */}
-      <div className="ml-auto flex items-center gap-3">
+      <div className="ml-auto flex items-center gap-3 ">
         <span
           className="hidden sm:block text-xs font-mono"
           style={{ color: isDark ? "#5a5a8a" : "#8888aa" }}

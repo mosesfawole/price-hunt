@@ -3,6 +3,7 @@ import { getCached, setCache } from "@/lib/cache";
 import { fetchFromSerpAPI } from "@/lib/serpapi";
 
 export async function GET(req: NextRequest) {
+  console.log("KEY:", process.env.SERPAPI_KEY);
   const query = req.nextUrl.searchParams.get("q");
 
   // Validate

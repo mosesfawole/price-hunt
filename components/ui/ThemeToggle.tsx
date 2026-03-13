@@ -14,7 +14,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-lg transition-all"
+      className="p-2 rounded-lg transition-all cursor-pointer"
       style={{
         background: isDark ? "#13132a" : "#e8e8f0",
         border: `1px solid ${isDark ? "#252540" : "#d0d0e0"}`,
