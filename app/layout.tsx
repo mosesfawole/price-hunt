@@ -27,6 +27,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            try {
+              const s = JSON.parse(localStorage.getItem('price-hunt-storage') || '{}');
+              if (s.state?.isDark !== false) document.documentElement.classList.add('dark');
+            } catch(e) {}
+          `,
+          }}
+        />
+      </head>
       <body
         className={`${syne.variable} ${jetbrains.variable} font-mono min-h-screen`}
       >

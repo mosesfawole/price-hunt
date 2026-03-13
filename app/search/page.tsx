@@ -188,13 +188,8 @@ export default function SearchPage() {
         {/* ── Results section — shown after search ── */}
         {(hasSearched || isLoading) && (
           <div className="flex-1 px-4 md:px-8 py-6 max-w-3xl mx-auto w-full space-y-5">
-            {/* Search bar stays at top */}
             <SearchBar />
-
-            {/* Summary stats */}
-            <PriceSummary />
-
-            {/* Product list */}
+            {!isLoading && <PriceSummary />}
             <ProductGrid />
           </div>
         )}
