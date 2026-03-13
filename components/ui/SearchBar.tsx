@@ -27,7 +27,7 @@ export default function SearchBar() {
   const showHistory = focused && history.length > 0 && !query.trim();
 
   return (
-    <div className="relative w-full max-w-3xl mx-auto">
+    <div className="relative w-full max-w-2xl mx-auto">
       <form onSubmit={handleSubmit}>
         <div
           className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all"
@@ -84,7 +84,7 @@ export default function SearchBar() {
             }}
           >
             {isLoading ? (
-              <div className="w-3 h-3 border-2 border-black border-t-transparent rounded-full animate-spin" />
+              <div className="w-3 h-3 border-3 border-black border-t-transparent rounded-full animate-spin" />
             ) : (
               <>
                 Search <ArrowRight size={12} />
