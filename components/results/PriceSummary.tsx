@@ -18,28 +18,32 @@ export default function PriceSummary() {
       icon: <TrendingDown size={14} />,
       label: "Lowest",
       value: `$${lowest.toFixed(2)}`,
-      accent: "#00d4aa",
+      accentClass: "border-brand-green",
+      iconClass: "text-brand-green",
       sub: results[0].store,
     },
     {
       icon: <TrendingUp size={14} />,
       label: "Highest",
       value: `$${highest.toFixed(2)}`,
-      accent: "#ff4d6d",
+      accentClass: "border-brand-red",
+      iconClass: "text-brand-red",
       sub: results[results.length - 1].store,
     },
     {
       icon: <BarChart2 size={14} />,
       label: "Average",
       value: `$${average.toFixed(2)}`,
-      accent: "#4d9fff",
+      accentClass: "border-brand-blue",
+      iconClass: "text-brand-blue",
       sub: `${results.length} stores`,
     },
     {
       icon: <Zap size={14} />,
       label: "Max Savings",
       value: `$${savings.toFixed(2)}`,
-      accent: "#f0c040",
+      accentClass: "border-brand-gold",
+      iconClass: "text-brand-gold",
       sub: `${savingsPercent}% off`,
     },
   ];
@@ -47,19 +51,13 @@ export default function PriceSummary() {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h2
-          className="text-sm font-display font-bold"
-          style={{ color: isDark ? "#ffffff" : "#1a1a2e" }}
-        >
-          Results for <span style={{ color: "#00d4aa" }}>"{query}"</span>
+        <h2 className="text-sm font-display font-bold text-brand-text-light dark:text-brand-text-dark">
+          Results for <span className="text-brand-green">"{query}"</span>
         </h2>
-        <p className="text-xs font-mono" style={{ color: "#5a5a8a" }}>
+        <p className="text-xs font-mono text-brand-muted">
           {results.length} products
           {isCached && (
-            <span
-              className="ml-2 px-1.5 py-0.5 rounded text-[10px]"
-              style={{ background: "rgba(77,159,255,0.1)", color: "#4d9fff" }}
-            >
+            <span className="ml-2 px-1.5 py-0.5 rounded text-[10px] bg-accent-blue text-brand-blue">
               cached
             </span>
           )}
@@ -69,33 +67,18 @@ export default function PriceSummary() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {stats.map((stat) => (
           <div
-            key={stat.label}
-            className="rounded-xl p-3"
-            style={{
-              background: isDark ? "#0f0f20" : "#ffffff",
-              border: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
-              borderBottom: `2px solid ${stat.accent}`,
-            }}
+            className={`rounded-xl p-3 bg-surface-lightCard dark:bg-surface-card border border-surface-lightBorder dark:border-surface-border ${stat.accentClass} border-b-2`}
           >
             <div className="flex items-center gap-1.5 mb-2">
-              <span style={{ color: stat.accent }}>{stat.icon}</span>
-              <span
-                className="text-[10px] font-mono tracking-widest uppercase"
-                style={{ color: "#5a5a8a" }}
-              >
+              <span className={stat.iconClass}>{stat.icon}</span>
+              <span className="text-[10px] font-mono tracking-widest uppercase text-brand-muted">
                 {stat.label}
               </span>
             </div>
-            <p
-              className="text-base font-bold font-mono"
-              style={{ color: isDark ? "#ffffff" : "#1a1a2e" }}
-            >
+            <p className="text-base font-bold font-mono text-brand-text-light dark:text-brand-text-dark">
               {stat.value}
             </p>
-            <p
-              className="text-[10px] font-mono mt-0.5"
-              style={{ color: "#5a5a8a" }}
-            >
+            <p className="text-[10px] font-mono mt-0.5 text-brand-muted">
               {stat.sub}
             </p>
           </div>

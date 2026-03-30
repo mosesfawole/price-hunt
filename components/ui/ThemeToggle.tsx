@@ -14,21 +14,13 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-lg transition-all cursor-pointer"
-      style={{
-        background: isDark ? "#13132a" : "#e8e8f0",
-        border: `1px solid ${isDark ? "#252540" : "#d0d0e0"}`,
-      }}
+      className="p-2 rounded-lg transition-all cursor-pointer bg-surface-lightHover dark:bg-surface-hover border border-surface-lightBorder dark:border-surface-border"
       title={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
       {isDark ? (
         <Sun size={14} className="text-brand-gold" />
       ) : (
-        <Moon
-          size={14}
-          className="text-brand-blue"
-          style={{ color: "#4d9fff" }}
-        />
+        <Moon size={14} className="text-brand-blue" />
       )}
     </button>
   );

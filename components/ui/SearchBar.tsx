@@ -29,17 +29,10 @@ export default function SearchBar() {
   return (
     <div className="relative w-full max-w-2xl mx-auto">
       <form onSubmit={handleSubmit}>
-        <div
-          className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all"
-          style={{
-            background: isDark ? "#0f0f20" : "#ffffff",
-            border: `1.5px solid ${focused ? "#00d4aa" : isDark ? "#252540" : "#e0e0f0"}`,
-            boxShadow: focused ? "0 0 0 3px rgba(0,212,170,0.1)" : "none",
-          }}
-        >
+        <div className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all bg-surface-lightCard dark:bg-surface-card border-2 border-surface-lightBorder dark:border-surface-border focus-within:border-brand-green focus-within:shadow-focus">
           <Search
             size={16}
-            style={{ color: focused ? "#00d4aa" : "#5a5a8a" }}
+            className="text-brand-muted focus-within:text-brand-green"
           />
 
           <input
@@ -50,8 +43,7 @@ export default function SearchBar() {
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => setFocused(true)}
             onBlur={() => setTimeout(() => setFocused(false), 150)}
-            className="flex-1 bg-transparent outline-none text-base md:text-sm"
-            style={{ color: isDark ? "#ffffff" : "#1a1a2e" }}
+            className="flex-1 bg-transparent outline-none text-base md:text-sm text-brand-text-light dark:text-brand-text-dark"
           />
 
           {query && (
@@ -62,8 +54,7 @@ export default function SearchBar() {
                 setQuery("");
                 clearResults();
               }}
-              className="shrink-0"
-              style={{ color: "#5a5a8a" }}
+              className="shrink-0 text-brand-muted"
             >
               <X size={14} />
             </button>
@@ -72,16 +63,7 @@ export default function SearchBar() {
           <button
             type="submit"
             disabled={isLoading || !query.trim()}
-            className="flex items-center gap-1 px-2 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0"
-            style={{
-              background: query.trim()
-                ? "#00d4aa"
-                : isDark
-                  ? "#1e1e38"
-                  : "#e0e0f0",
-              color: query.trim() ? "#000000" : "#5a5a8a",
-              cursor: isLoading || !query.trim() ? "not-allowed" : "pointer",
-            }}
+            className="flex items-center gap-1 px-2 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 disabled:cursor-not-allowed bg-brand-green disabled:bg-surface-lightBorder dark:disabled:bg-surface-border text-black disabled:text-brand-muted"
           >
             {isLoading ? (
               <div className="w-3 h-3 border-2 border-black border-t-transparent rounded-full animate-spin" />
@@ -96,44 +78,19 @@ export default function SearchBar() {
 
       {/* Search history dropdown */}
       {showHistory && (
-        <div
-          className="absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden z-20 animate-fade-in"
-          style={{
-            background: isDark ? "#0f0f20" : "#ffffff",
-            border: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
-            boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
-          }}
-        >
-          <div
-            className="px-4 py-2 text-[10px] font-mono tracking-widest uppercase"
-            style={{ color: "#5a5a8a" }}
-          >
+        <div className="absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden z-20 animate-fade-in bg-surface-lightCard dark:bg-surface-card border border-surface-lightBorder dark:border-surface-border shadow-2xl">
+          <div className="px-4 py-2 text-[10px] font-mono tracking-widest uppercase text-brand-muted">
             Recent Searches
           </div>
           {history.map((h) => (
             <button
               key={h.query}
               onClick={() => handleHistoryClick(h.query)}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors"
-              style={{
-                color: isDark ? "#e0e0f4" : "#1a1a2e",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.background = isDark
-                  ? "#161628"
-                  : "#f4f4f8";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.background =
-                  "transparent";
-              }}
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors text-brand-text-light dark:text-brand-text-dark hover:bg-surface-lightHover dark:hover:bg-surface-hover"
             >
-              <Clock size={12} style={{ color: "#5a5a8a" }} />
+              <Clock size={12} className="text-brand-muted" />
               <span className="text-sm flex-1">{h.query}</span>
-              <span
-                className="text-[11px] font-mono"
-                style={{ color: "#5a5a8a" }}
-              >
+              <span className="text-[11px] font-mono text-brand-muted">
                 {h.resultCount} results
               </span>
             </button>

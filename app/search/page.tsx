@@ -29,10 +29,7 @@ export default function SearchPage() {
   };
 
   return (
-    <div
-      className="min-h-screen flex flex-col"
-      style={{ background: isDark ? "#08080f" : "#f4f4f8" }}
-    >
+    <div className="min-h-screen flex flex-col bg-surface dark:bg-surface-DEFAULT light:bg-surface-light">
       <Navbar />
 
       <main className="flex-1 flex flex-col">
@@ -42,32 +39,19 @@ export default function SearchPage() {
             {/* Title */}
             <div className="text-center space-y-3 animate-slide-up">
               <div className="flex items-center justify-center gap-2 mb-4">
-                <div
-                  className="px-3 py-1 rounded-full text-[11px] font-mono flex items-center gap-1.5"
-                  style={{
-                    background: "rgba(0,212,170,0.1)",
-                    border: "1px solid rgba(0,212,170,0.2)",
-                    color: "#00d4aa",
-                  }}
-                >
+                <div className="px-3 py-1 rounded-full text-[11px] font-mono flex items-center gap-1.5 bg-accent-green border border-accent-greenBorder text-brand-green">
                   <Sparkles size={10} />
                   Real-time price comparison
                 </div>
               </div>
 
-              <h1
-                className="text-3xl md:text-5xl font-display font-bold leading-tight"
-                style={{ color: isDark ? "#ffffff" : "#1a1a2e" }}
-              >
-                Find the <span style={{ color: "#00d4aa" }}>lowest price</span>
+              <h1 className="text-3xl md:text-5xl font-display font-bold leading-tight text-brand-text-light dark:text-brand-text-dark">
+                Find the <span className="text-brand-green">lowest price</span>
                 <br />
                 for anything
               </h1>
 
-              <p
-                className="text-sm md:text-base font-mono max-w-md mx-auto"
-                style={{ color: "#5a5a8a" }}
-              >
+              <p className="text-sm md:text-base font-mono max-w-md mx-auto text-brand-muted">
                 Search any product and instantly compare prices across multiple
                 retailers — Amazon, Walmart, Best Buy and more
               </p>
@@ -77,17 +61,9 @@ export default function SearchPage() {
             <div className="w-full max-w-2xl px-4 animate-slide-up">
               <SearchBar />
             </div>
-            {/* Disclaimer */}
             <div className="w-full max-w-2xl px-4 animate-fade-in">
-              <div
-                className="flex items-start gap-2 px-4 py-3 rounded-xl text-xs font-mono"
-                style={{
-                  background: "rgba(240,192,64,0.06)",
-                  border: "1px solid rgba(240,192,64,0.2)",
-                  color: "#5a5a8a",
-                }}
-              >
-                <span style={{ color: "#f0c040", marginTop: "1px" }}>⚠</span>
+              <div className="flex items-start gap-2 px-4 py-3 rounded-xl text-xs font-mono bg-accent-gold border border-accent-goldBorder text-brand-muted">
+                <span className="text-brand-gold mt-0.5">⚠</span>
                 <span>
                   Results are aggregated from Google Shopping and may include
                   accessories or related products alongside the item you
@@ -102,24 +78,14 @@ export default function SearchPage() {
               <div className="w-full max-w-2xl px-4 animate-fade-in">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <Clock size={12} style={{ color: "#5a5a8a" }} />
-                    <span
-                      className="text-[11px] font-mono tracking-widest uppercase"
-                      style={{ color: "#5a5a8a" }}
-                    >
+                    <Clock size={12} className="text-brand-muted" />
+                    <span className="text-[11px] font-mono tracking-widest uppercase text-brand-muted">
                       Recent Searches
                     </span>
                   </div>
                   <button
                     onClick={clearHistory}
-                    className="text-[11px] font-mono transition-colors"
-                    style={{ color: "#5a5a8a" }}
-                    onMouseEnter={(e) =>
-                      ((e.target as HTMLElement).style.color = "#ff4d6d")
-                    }
-                    onMouseLeave={(e) =>
-                      ((e.target as HTMLElement).style.color = "#5a5a8a")
-                    }
+                    className="text-[11px] font-mono transition-colors hover:text-brand-red text-brand-muted"
                   >
                     Clear all
                   </button>
@@ -131,24 +97,11 @@ export default function SearchPage() {
                       title="title"
                       key={h.query}
                       onClick={() => handleHistoryClick(h.query)}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono transition-all"
-                      style={{
-                        background: isDark ? "#0f0f20" : "#ffffff",
-                        border: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
-                        color: isDark ? "#e0e0f4" : "#1a1a2e",
-                      }}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLElement).style.borderColor =
-                          "#00d4aa";
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.borderColor =
-                          isDark ? "#252540" : "#e0e0f0";
-                      }}
+                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono transition-all bg-surface-lightCard dark:bg-surface-card border border-surface-lightBorder dark:border-surface-border text-brand-text-light dark:text-brand-text-dark hover:border-brand-green"
                     >
-                      <TrendingDown size={10} style={{ color: "#00d4aa" }} />
+                      <TrendingDown size={10} className="text-brand-green" />
                       {h.query}
-                      <span style={{ color: "#5a5a8a" }}>{h.resultCount}</span>
+                      <span className="text-brand-muted">{h.resultCount}</span>
                     </button>
                   ))}
                 </div>
@@ -157,10 +110,7 @@ export default function SearchPage() {
 
             {/* Popular searches */}
             <div className="w-full max-w-2xl px-4 animate-fade-in">
-              <p
-                className="text-[11px] font-mono tracking-widest uppercase mb-3"
-                style={{ color: "#5a5a8a" }}
-              >
+              <p className="text-[11px] font-mono tracking-widest uppercase mb-3 text-brand-muted">
                 Try searching for
               </p>
               <div className="flex flex-wrap gap-2">
@@ -177,24 +127,7 @@ export default function SearchPage() {
                   <button
                     key={suggestion}
                     onClick={() => handleHistoryClick(suggestion)}
-                    className="px-3 py-1.5 rounded-lg text-xs font-mono transition-all"
-                    style={{
-                      background: isDark ? "#0f0f20" : "#ffffff",
-                      border: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
-                      color: "#5a5a8a",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.color = isDark
-                        ? "#ffffff"
-                        : "#1a1a2e";
-                      (e.currentTarget as HTMLElement).style.borderColor =
-                        "#00d4aa";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.color = "#5a5a8a";
-                      (e.currentTarget as HTMLElement).style.borderColor =
-                        isDark ? "#252540" : "#e0e0f0";
-                    }}
+                    className="px-3 py-1.5 rounded-lg text-xs font-mono transition-all bg-surface-lightCard dark:bg-surface-card border border-surface-lightBorder dark:border-surface-border text-brand-muted hover:text-brand-text-light dark:hover:text-brand-text-dark hover:border-brand-green"
                   >
                     {suggestion}
                   </button>
@@ -213,27 +146,13 @@ export default function SearchPage() {
           </div>
         )}
       </main>
-      {/* Footer */}
-      <footer
-        className="py-6 text-center text-[11px] font-mono"
-        style={{
-          color: "#5a5a8a",
-          borderTop: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
-        }}
-      >
+      <footer className="py-6 text-center text-[11px] font-mono text-brand-muted border-t border-surface-lightBorder dark:border-surface-border">
         © 2026 PriceHunt — Made by{" "}
         <a
           href="https://github.com/mosesfawole"
           target="_blank"
           rel="noopener noreferrer"
-          className="transition-colors"
-          style={{ color: "#00d4aa" }}
-          onMouseEnter={(e) =>
-            ((e.target as HTMLElement).style.color = "#ffffff")
-          }
-          onMouseLeave={(e) =>
-            ((e.target as HTMLElement).style.color = "#00d4aa")
-          }
+          className="transition-colors hover:text-brand-text-light dark:hover:text-brand-text-dark text-brand-green"
         >
           Moses Fawole
         </a>

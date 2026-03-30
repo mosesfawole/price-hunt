@@ -32,29 +32,14 @@ export default function ProductGrid() {
   // Error state
   if (error) {
     return (
-      <div
-        className="flex flex-col items-center justify-center py-16 gap-3 rounded-xl"
-        style={{
-          background: isDark ? "#0f0f20" : "#ffffff",
-          border: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
-        }}
-      >
-        <div
-          className="w-12 h-12 rounded-full flex items-center justify-center"
-          style={{ background: "rgba(255,77,109,0.1)" }}
-        >
-          <AlertCircle size={20} style={{ color: "#ff4d6d" }} />
+      <div className="flex flex-col items-center justify-center py-16 gap-3 rounded-xl bg-surface-lightCard dark:bg-surface-card border border-surface-lightBorder dark:border-surface-border">
+        <div className="w-12 h-12 rounded-full flex items-center justify-center bg-accent-red">
+          <AlertCircle size={20} className="text-brand-red" />
         </div>
-        <p
-          className="text-sm font-semibold"
-          style={{ color: isDark ? "#ffffff" : "#1a1a2e" }}
-        >
+        <p className="text-sm font-semibold text-brand-text-light dark:text-brand-text-dark">
           Search Failed
         </p>
-        <p
-          className="text-xs font-mono text-center max-w-xs"
-          style={{ color: "#5a5a8a" }}
-        >
+        <p className="text-xs font-mono text-center max-w-xs text-brand-muted">
           {error}
         </p>
       </div>
@@ -64,26 +49,14 @@ export default function ProductGrid() {
   // No results
   if (hasSearched && results.length === 0) {
     return (
-      <div
-        className="flex flex-col items-center justify-center py-16 gap-3 rounded-xl"
-        style={{
-          background: isDark ? "#0f0f20" : "#ffffff",
-          border: `1px solid ${isDark ? "#252540" : "#e0e0f0"}`,
-        }}
-      >
-        <div
-          className="w-12 h-12 rounded-full flex items-center justify-center"
-          style={{ background: isDark ? "#1e1e38" : "#f0f0f8" }}
-        >
-          <SearchX size={20} style={{ color: "#5a5a8a" }} />
+      <div className="flex flex-col items-center justify-center py-16 gap-3 rounded-xl bg-surface-lightCard dark:bg-surface-card border border-surface-lightBorder dark:border-surface-border">
+        <div className="w-12 h-12 rounded-full flex items-center justify-center bg-surface-lightHover dark:bg-surface-hover">
+          <SearchX size={20} className="text-brand-muted" />
         </div>
-        <p
-          className="text-sm font-semibold"
-          style={{ color: isDark ? "#ffffff" : "#1a1a2e" }}
-        >
+        <p className="text-sm font-semibold text-brand-text-light dark:text-brand-text-dark">
           No results found
         </p>
-        <p className="text-xs font-mono" style={{ color: "#5a5a8a" }}>
+        <p className="text-xs font-mono text-brand-muted">
           Try a different search term
         </p>
       </div>
