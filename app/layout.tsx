@@ -20,7 +20,7 @@ export default function RootLayout({
             __html: `
               try {
                 const storage = JSON.parse(localStorage.getItem('price-hunt-storage') || '{}');
-                if (storage.state?.isDark !== false) {
+                if (storage.state?.isDark === true) {
                   document.documentElement.classList.add('dark');
                 }
               } catch (error) {}
@@ -28,7 +28,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen font-mono">{children}</body>
+      <body className="min-h-screen font-sans">{children}</body>
     </html>
   );
 }

@@ -2,16 +2,24 @@
 
 export default function SkeletonCard() {
   return (
-    <div className="rounded-xl p-4 flex gap-4 bg-surface-lightCard dark:bg-surface-card border border-surface-lightBorder dark:border-surface-border">
-      <div className="w-16 h-16 rounded-lg shrink-0 animate-pulse bg-surface-lightHover dark:bg-surface-hover" />
-      <div className="flex-1 space-y-2">
-        <div className="h-3 rounded animate-pulse w-3/4 bg-surface-lightHover dark:bg-surface-hover" />
-        <div className="h-3 rounded animate-pulse w-1/2 bg-surface-lightHover dark:bg-surface-hover" />
-        <div className="h-3 rounded animate-pulse w-1/4 bg-surface-lightHover dark:bg-surface-hover" />
-      </div>
-      <div className="flex flex-col items-end gap-2 shrink-0">
-        <div className="h-5 w-16 rounded animate-pulse bg-surface-lightHover dark:bg-surface-hover" />
-        <div className="h-3 w-12 rounded animate-pulse bg-surface-lightHover dark:bg-surface-hover" />
+    <div className="panel rounded-[1.65rem] p-4 md:p-5">
+      <div className="grid gap-4 md:grid-cols-[7.25rem_minmax(0,1fr)_11rem]">
+        <div className="h-24 w-24 animate-pulse rounded-[1.4rem] bg-surface-lightHover dark:bg-surface-hover md:h-28 md:w-28" />
+        <div className="space-y-3">
+          <div className="h-6 w-32 animate-pulse rounded-full bg-surface-lightHover dark:bg-surface-hover" />
+          <div className="h-5 w-5/6 animate-pulse rounded bg-surface-lightHover dark:bg-surface-hover" />
+          <div className="h-5 w-2/3 animate-pulse rounded bg-surface-lightHover dark:bg-surface-hover" />
+          <div className="flex gap-2">
+            <div className="h-8 w-28 animate-pulse rounded-full bg-surface-lightHover dark:bg-surface-hover" />
+            <div className="h-8 w-32 animate-pulse rounded-full bg-surface-lightHover dark:bg-surface-hover" />
+          </div>
+          <div className="h-12 w-full animate-pulse rounded-2xl bg-surface-lightHover dark:bg-surface-hover" />
+        </div>
+        <div className="space-y-3">
+          <div className="h-4 w-20 animate-pulse rounded bg-surface-lightHover dark:bg-surface-hover" />
+          <div className="h-8 w-24 animate-pulse rounded bg-surface-lightHover dark:bg-surface-hover" />
+          <div className="h-10 w-10 animate-pulse rounded-full bg-surface-lightHover dark:bg-surface-hover" />
+        </div>
       </div>
     </div>
   );

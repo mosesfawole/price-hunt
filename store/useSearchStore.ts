@@ -72,7 +72,7 @@ export const useSearchStore = create<SearchStore>()(
       currency: DEFAULT_CURRENCY,
       filters: DEFAULT_SEARCH_FILTERS,
       history: [],
-      isDark: true,
+      isDark: false,
 
       setQuery: (query) => set({ query }),
 

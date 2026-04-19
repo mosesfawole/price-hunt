@@ -1,14 +1,17 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { AlertCircle, SearchX } from "lucide-react";
 import { applySearchFilters } from "@/lib/product-matching";
 import { useSearchStore } from "@/store/useSearchStore";
 import ProductCard from "./ProductCard";
 import SkeletonCard from "@/components/ui/SkeletonCard";
 
+const DEFAULT_VISIBLE_RESULTS = 12;
+
 export default function ProductGrid() {
   const { results, filters, isLoading, error, hasSearched } = useSearchStore();
+  const [visibleCount, setVisibleCount] = useState(DEFAULT_VISIBLE_RESULTS);
 
   const filteredResults = useMemo(
     () => applySearchFilters(results, filters),
@@ -24,6 +27,8 @@ export default function ProductGrid() {
 
     return Math.min(...eligible.map((product) => product.price));
   }, [filteredResults]);
+
+  const visibleResults = filteredResults.slice(0, visibleCount);
 
   if (isLoading) {
     return (
@@ -87,15 +92,57 @@ export default function ProductGrid() {
   if (!filteredResults.length) return null;
 
   return (
-    <div className="space-y-3">
-      {filteredResults.map((product, index) => (
-        <ProductCard
-          key={`${product.store}-${product.link}-${product.price}`}
-          product={product}
-          rank={index}
-          lowestRelevantPrice={lowestRelevantPrice}
-        />
-      ))}
-    </div>
+    <section className="space-y-4">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-xl font-display font-semibold text-brand-text-light dark:text-brand-text-dark">
+            Ranked listings
+          </h2>
+          <p className="text-sm text-brand-muted">
+            Best matches appear first, then lower prices among stronger matches.
+          </p>
+        </div>
+        <div className="text-[11px] font-mono uppercase tracking-[0.2em] text-brand-muted">
+          {filteredResults.length} visible listings
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        {visibleResults.map((product, index) => (
+          <ProductCard
+            key={`${product.store}-${product.link}-${product.price}`}
+            product={product}
+            rank={index}
+            lowestRelevantPrice={lowestRelevantPrice}
+          />
+        ))}
+      </div>
+
+      {filteredResults.length > DEFAULT_VISIBLE_RESULTS && (
+        <div className="flex justify-center">
+          {visibleCount < filteredResults.length ? (
+            <button
+              type="button"
+              onClick={() =>
+                setVisibleCount((count) =>
+                  Math.min(count + DEFAULT_VISIBLE_RESULTS, filteredResults.length),
+                )
+              }
+              className="rounded-full border border-surface-lightBorder bg-surface-lightCard px-5 py-2.5 text-sm font-medium text-brand-text-light shadow-soft transition-colors hover:border-brand-green dark:border-surface-border dark:bg-surface-card dark:text-brand-text-dark"
+            >
+              Show more results
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setVisibleCount(DEFAULT_VISIBLE_RESULTS)}
+              className="rounded-full border border-surface-lightBorder bg-surface-lightCard px-5 py-2.5 text-sm font-medium text-brand-text-light shadow-soft transition-colors hover:border-brand-green dark:border-surface-border dark:bg-surface-card dark:text-brand-text-dark"
+            >
+              Show fewer results
+            </button>
+          )}
+        </div>
+      )}
+    </section>
   );
 }

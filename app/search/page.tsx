@@ -11,13 +11,11 @@ import { useSearchStore } from "@/store/useSearchStore";
 
 const POPULAR_SEARCHES = [
   "Logitech MX Master 3S",
-  "iPhone 15 Pro 256GB",
+  "iPhone 15 Pro 256GB Natural Titanium",
   "Samsung S24 Ultra 512GB",
   "Sony WH-1000XM5",
-  "MacBook Pro M4 14-inch",
-  "Apple Watch Series 10 45mm",
-  "Nintendo Switch OLED",
-  "Kindle Paperwhite 16GB",
+  "MacBook Pro M4 14-inch 16GB 512GB",
+  "Apple Watch Series 10 45mm GPS",
 ];
 
 export default function SearchPage() {
@@ -41,98 +39,111 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-surface light:bg-surface-light dark:bg-surface-DEFAULT">
+    <div className="bg-grid flex min-h-screen flex-col">
       <Navbar />
 
       <main className="flex flex-1 flex-col">
         {!hasSearched && !isLoading && (
-          <div className="flex flex-1 flex-col items-center justify-center gap-8 px-4 py-16">
-            <div className="space-y-3 text-center animate-slide-up">
-              <div className="mb-4 flex items-center justify-center gap-2">
-                <div className="flex items-center gap-1.5 rounded-full border border-accent-greenBorder bg-accent-green px-3 py-1 text-[11px] font-mono text-brand-green">
-                  <Sparkles size={10} />
-                  Match-aware shopping results
+          <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center gap-10 px-4 py-14 md:px-8 md:py-20">
+            <section className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_22rem] lg:items-end">
+              <div className="space-y-6">
+                <div className="inline-flex items-center gap-2 rounded-full border border-accent-greenBorder bg-accent-green px-4 py-2 text-[11px] font-mono uppercase tracking-[0.22em] text-brand-green">
+                  <Sparkles size={12} />
+                  Trust-first price comparison
+                </div>
+
+                <div className="space-y-4">
+                  <h1 className="max-w-3xl text-4xl font-display font-semibold leading-tight text-brand-text-light dark:text-brand-text-dark md:text-6xl">
+                    Shop by the
+                    <span className="text-brand-green"> right product</span>,
+                    not just the lowest number.
+                  </h1>
+                  <p className="max-w-2xl text-base leading-7 text-brand-muted md:text-lg">
+                    Price Hunt compares Google Shopping listings with match
+                    confidence, condition checks, and cleaner filters so you can
+                    spot the best relevant offer faster.
+                  </p>
+                </div>
+
+                <div className="max-w-3xl">
+                  <SearchBar />
                 </div>
               </div>
 
-              <h1 className="text-3xl font-display font-bold leading-tight text-brand-text-light dark:text-brand-text-dark md:text-5xl">
-                Compare prices with
-                <span className="text-brand-green"> confidence signals</span>
-              </h1>
-
-              <p className="mx-auto max-w-xl text-sm font-mono text-brand-muted md:text-base">
-                Price Hunt reads Google Shopping listings and ranks them by how
-                closely they match your query before showing the cheapest strong
-                options.
-              </p>
-            </div>
-
-            <div className="w-full max-w-2xl px-4 animate-slide-up">
-              <SearchBar />
-            </div>
-
-            <div className="w-full max-w-2xl px-4 animate-fade-in">
-              <div className="rounded-xl border border-accent-goldBorder bg-accent-gold px-4 py-3 text-xs font-mono text-brand-muted">
-                Search with enough detail to improve match quality: brand,
-                model, capacity, color, and size help the scoring layer separate
-                exact products from accessories and variants.
+              <div className="panel rounded-[2rem] p-5">
+                <h2 className="text-lg font-display font-semibold text-brand-text-light dark:text-brand-text-dark">
+                  Search tips that improve accuracy
+                </h2>
+                <ul className="mt-4 space-y-3 text-sm leading-6 text-brand-muted">
+                  <li>Include brand and model name or number.</li>
+                  <li>Add storage, size, color, or version when it matters.</li>
+                  <li>Use filters to hide accessories and used listings.</li>
+                  <li>Review low-confidence or variant listings before buying.</li>
+                </ul>
               </div>
-            </div>
+            </section>
 
-            {history.length > 0 && (
-              <div className="w-full max-w-2xl px-4 animate-fade-in">
-                <div className="mb-3 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Clock size={12} className="text-brand-muted" />
-                    <span className="text-[11px] font-mono uppercase tracking-widest text-brand-muted">
-                      Recent Searches
-                    </span>
-                  </div>
-                  <button
-                    onClick={clearHistory}
-                    className="text-[11px] font-mono text-brand-muted transition-colors hover:text-brand-red"
-                  >
-                    Clear all
-                  </button>
+            <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,20rem)]">
+              <div className="panel rounded-[2rem] p-5">
+                <div className="mb-4 flex items-center gap-2">
+                  <TrendingDown size={14} className="text-brand-green" />
+                  <h2 className="text-sm font-mono uppercase tracking-[0.2em] text-brand-muted">
+                    Try a precise search
+                  </h2>
                 </div>
-
                 <div className="flex flex-wrap gap-2">
-                  {history.map((entry) => (
+                  {POPULAR_SEARCHES.map((suggestion) => (
                     <button
-                      key={entry.query}
-                      onClick={() => handleQuickSearch(entry.query)}
-                      className="flex items-center gap-2 rounded-lg border border-surface-lightBorder bg-surface-lightCard px-3 py-1.5 text-xs font-mono text-brand-text-light transition-all hover:border-brand-green dark:border-surface-border dark:bg-surface-card dark:text-brand-text-dark"
+                      key={suggestion}
+                      onClick={() => handleQuickSearch(suggestion)}
+                      className="rounded-full border border-surface-lightBorder bg-surface-lightCard px-4 py-2 text-sm text-brand-text-light shadow-soft transition-colors hover:border-brand-green dark:border-surface-border dark:bg-surface-card dark:text-brand-text-dark"
                     >
-                      <TrendingDown size={10} className="text-brand-green" />
-                      {entry.query}
-                      <span className="text-brand-muted">{entry.resultCount}</span>
+                      {suggestion}
                     </button>
                   ))}
                 </div>
               </div>
-            )}
 
-            <div className="w-full max-w-2xl px-4 animate-fade-in">
-              <p className="mb-3 text-[11px] font-mono uppercase tracking-widest text-brand-muted">
-                Try searching for
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {POPULAR_SEARCHES.map((suggestion) => (
-                  <button
-                    key={suggestion}
-                    onClick={() => handleQuickSearch(suggestion)}
-                    className="rounded-lg border border-surface-lightBorder bg-surface-lightCard px-3 py-1.5 text-xs font-mono text-brand-muted transition-all hover:border-brand-green hover:text-brand-text-light dark:border-surface-border dark:bg-surface-card dark:hover:text-brand-text-dark"
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>
-            </div>
+              {history.length > 0 && (
+                <div className="panel rounded-[2rem] p-5">
+                  <div className="mb-4 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <Clock size={14} className="text-brand-muted" />
+                      <h2 className="text-sm font-mono uppercase tracking-[0.2em] text-brand-muted">
+                        Recent
+                      </h2>
+                    </div>
+                    <button
+                      onClick={clearHistory}
+                      className="text-xs font-medium text-brand-muted transition-colors hover:text-brand-red"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {history.map((entry) => (
+                      <button
+                        key={entry.query}
+                        onClick={() => handleQuickSearch(entry.query)}
+                        className="flex w-full items-center justify-between rounded-[1.15rem] border border-surface-lightBorder bg-surface-lightCard px-4 py-3 text-left shadow-soft transition-colors hover:border-brand-green dark:border-surface-border dark:bg-surface-card"
+                      >
+                        <span className="truncate pr-3 text-sm text-brand-text-light dark:text-brand-text-dark">
+                          {entry.query}
+                        </span>
+                        <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-brand-muted">
+                          {entry.resultCount}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </section>
           </div>
         )}
 
         {(hasSearched || isLoading) && (
-          <div className="mx-auto flex-1 w-full max-w-5xl space-y-5 px-4 py-6 md:px-8">
+          <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-5 px-4 py-6 md:px-8 md:py-8">
             <SearchBar />
             {!isLoading && (
               <>
@@ -145,8 +156,9 @@ export default function SearchPage() {
         )}
       </main>
 
-      <footer className="border-t border-surface-lightBorder py-6 text-center text-[11px] font-mono text-brand-muted dark:border-surface-border">
-        Copyright 2026 PriceHunt. Aggregated shopping data for research only.
+      <footer className="border-t border-surface-lightBorder/80 py-6 text-center text-sm text-brand-muted dark:border-surface-border">
+        Price Hunt surfaces shopping listings for research. Always verify final
+        product specs, condition, and shipping terms on the retailer site.
       </footer>
     </div>
   );
