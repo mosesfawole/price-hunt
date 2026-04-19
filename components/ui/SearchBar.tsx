@@ -1,6 +1,7 @@
 "use client";
-import { useState, useRef } from "react";
-import { Search, X, Clock } from "lucide-react";
+
+import { useRef, useState } from "react";
+import { Clock, Search, X } from "lucide-react";
 import { useSearchStore } from "@/store/useSearchStore";
 
 export default function SearchBar() {
@@ -9,18 +10,18 @@ export default function SearchBar() {
   const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (query.trim()) {
-      search(query);
-      setFocused(false);
-      inputRef.current?.blur();
-    }
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!query.trim()) return;
+
+    search(query);
+    setFocused(false);
+    inputRef.current?.blur();
   };
 
-  const handleHistoryClick = (q: string) => {
-    setQuery(q);
-    search(q);
+  const handleHistoryClick = (value: string) => {
+    setQuery(value);
+    search(value);
     setFocused(false);
   };
 
@@ -29,70 +30,75 @@ export default function SearchBar() {
   return (
     <div className="relative w-full">
       <form onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-3 rounded-[1.7rem] bg-[#1b2634] p-3 shadow-[0_20px_60px_rgba(17,24,39,0.22)] transition-colors focus-within:ring-4 focus-within:ring-accent-greenGlow dark:bg-[#0f171d] sm:flex-row sm:items-center">
-          <div className="flex min-w-0 flex-1 items-center gap-3 rounded-[1.25rem] bg-white/10 px-4 py-3 text-white/80">
-            <Search size={18} className="shrink-0 text-white/55" />
-
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder='Search a model, e.g. "iPhone 15 Pro 256GB"'
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onFocus={() => setFocused(true)}
-              onBlur={() => setTimeout(() => setFocused(false), 150)}
-              className="min-w-0 flex-1 bg-transparent text-base text-white outline-none placeholder:text-white/45"
-            />
-
-            {query && (
-              <button
-                title="clear"
-                type="button"
-                onClick={() => {
-                  setQuery("");
-                  clearResults();
-                }}
-                className="shrink-0 text-white/55 transition-colors hover:text-white"
-              >
-                <X size={14} />
-              </button>
-            )}
+        <div className="overflow-hidden rounded-[2rem] bg-[#171d22] text-white shadow-[0_24px_80px_rgba(19,25,29,0.24)] dark:bg-[#0f1518]">
+          <div className="flex items-center justify-between border-b border-white/10 px-5 py-3 text-[11px] font-mono uppercase tracking-[0.22em] text-white/55">
+            <span>Product query</span>
+            <span>Brand, model, storage, size</span>
           </div>
 
-          <button
-            type="submit"
-            disabled={isLoading || !query.trim()}
-            className="rounded-[1.25rem] bg-[#f7f2e7] px-5 py-3 text-sm font-semibold text-[#1f2937] transition-colors hover:bg-white disabled:cursor-not-allowed disabled:bg-white/20 disabled:text-white/40 sm:px-6"
-          >
-            {isLoading ? (
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            ) : (
-              "Search"
-            )}
-          </button>
+          <div className="flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:p-4">
+            <div className="flex min-w-0 flex-1 items-center gap-3 rounded-[1.4rem] bg-white/8 px-4 py-4">
+              <Search size={18} className="shrink-0 text-white/50" />
+              <input
+                ref={inputRef}
+                type="text"
+                placeholder='Try "HP EliteBook 840 G7 16GB 512GB"'
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                onFocus={() => setFocused(true)}
+                onBlur={() => setTimeout(() => setFocused(false), 150)}
+                className="min-w-0 flex-1 bg-transparent text-base text-white outline-none placeholder:text-white/38 md:text-lg"
+              />
+
+              {query && (
+                <button
+                  title="Clear search"
+                  type="button"
+                  onClick={() => {
+                    setQuery("");
+                    clearResults();
+                  }}
+                  className="shrink-0 rounded-full border border-white/10 p-1.5 text-white/55 transition-colors hover:text-white"
+                >
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading || !query.trim()}
+              className="rounded-[1.35rem] bg-[#fbf4e8] px-5 py-4 text-sm font-semibold text-[#1f1a17] transition-colors hover:bg-white disabled:cursor-not-allowed disabled:bg-white/20 disabled:text-white/35 sm:px-6"
+            >
+              {isLoading ? (
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#1f1a17] border-t-transparent" />
+              ) : (
+                "Search listings"
+              )}
+            </button>
+          </div>
         </div>
       </form>
 
-      {/* Search history dropdown */}
       {showHistory && (
-        <div className="panel absolute left-0 right-0 top-full z-20 mt-3 overflow-hidden rounded-[1.4rem]">
+        <div className="panel absolute left-0 right-0 top-full z-20 mt-3 overflow-hidden rounded-[1.6rem]">
           <div className="border-b border-surface-lightBorder px-4 py-3 dark:border-surface-border">
-            <span className="text-sm font-medium text-brand-muted">
+            <span className="text-[11px] font-mono uppercase tracking-[0.22em] text-brand-muted">
               Recent searches
             </span>
           </div>
-          {history.map((h) => (
+          {history.map((entry) => (
             <button
-              key={h.query}
-              onClick={() => handleHistoryClick(h.query)}
+              key={entry.query}
+              onClick={() => handleHistoryClick(entry.query)}
               className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-lightHover dark:hover:bg-surface-hover"
             >
-              <Clock size={16} className="text-brand-muted" />
+              <Clock size={15} className="text-brand-muted" />
               <span className="flex-1 text-brand-text-light dark:text-brand-text-dark">
-                {h.query}
+                {entry.query}
               </span>
               <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-brand-muted">
-                {h.resultCount} results
+                {entry.resultCount}
               </span>
             </button>
           ))}

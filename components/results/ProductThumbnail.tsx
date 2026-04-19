@@ -21,11 +21,11 @@ export default function ProductThumbnail({
 
   if (!src || hasError) {
     return (
-      <div className="flex h-full w-full items-center justify-center rounded-[1.4rem] bg-gradient-to-br from-[#f7efe1] via-[#fff8ef] to-[#eadfcd] text-brand-muted dark:from-[#172127] dark:via-[#1d2a32] dark:to-[#122027]">
-        <div className="flex flex-col items-center gap-1 text-center">
-          <ImageOff size={18} className="opacity-70" />
+      <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#f9efe0] via-[#fffaf1] to-[#ead9c2] text-brand-muted dark:from-[#182025] dark:via-[#202b31] dark:to-[#152026]">
+        <div className="flex flex-col items-center gap-1.5 text-center">
+          <ImageOff size={18} className="opacity-75" />
           <span className="text-[10px] font-mono uppercase tracking-[0.18em]">
-            No image
+            Image unavailable
           </span>
         </div>
       </div>
@@ -36,9 +36,9 @@ export default function ProductThumbnail({
     <Image
       src={buildProxyImageUrl(src)}
       alt={alt}
-      width={112}
-      height={112}
-      className="h-full w-full object-contain p-3"
+      width={144}
+      height={144}
+      className="h-full w-full object-contain p-4"
       onError={() => setHasError(true)}
       unoptimized
     />
