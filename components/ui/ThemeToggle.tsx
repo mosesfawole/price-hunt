@@ -6,7 +6,6 @@ import { useSearchStore } from "@/store/useSearchStore";
 export default function ThemeToggle() {
   const { isDark, toggleTheme } = useSearchStore();
 
-  // Apply theme on mount
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDark);
   }, [isDark]);

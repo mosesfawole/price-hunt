@@ -1,114 +1,157 @@
 "use client";
+
 import Image from "next/image";
-import { ExternalLink, Star, Award } from "lucide-react";
-import { useSearchStore } from "@/store/useSearchStore";
+import { ExternalLink, ShieldAlert, Star, Tag } from "lucide-react";
+import { getConfidenceLabel } from "@/lib/product-matching";
 import type { Product } from "@/types";
 
-interface Props {
+type ProductCardProps = {
   product: Product;
   rank: number;
-  lowestPrice: number;
-  highestPrice: number;
+  lowestRelevantPrice: number | null;
+};
+
+function getConfidenceStyles(confidence: Product["match"]["confidence"]): string {
+  switch (confidence) {
+    case "exact":
+      return "bg-accent-green text-brand-green border-accent-greenBorder";
+    case "likely":
+      return "bg-accent-blue text-brand-blue border-transparent";
+    case "variant":
+      return "bg-accent-gold text-brand-gold border-accent-goldBorder";
+    default:
+      return "bg-accent-red text-brand-red border-transparent";
+  }
 }
 
-export default function ProductCard({ product, rank, lowestPrice }: Props) {
-  const { isDark } = useSearchStore();
-  const isBestDeal = rank === 0;
-  const priceDiff = product.price - lowestPrice;
-  const isExpensive = priceDiff > 0 && priceDiff <= lowestPrice * 0.5;
+function buildProxyImageUrl(image: string): string {
+  return `/api/image?src=${encodeURIComponent(image)}`;
+}
+
+export default function ProductCard({
+  product,
+  rank,
+  lowestRelevantPrice,
+}: ProductCardProps) {
+  const rating = product.rating ?? 0;
+  const isLowestRelevantMatch =
+    lowestRelevantPrice !== null &&
+    product.match.confidence !== "related" &&
+    product.price === lowestRelevantPrice;
+  const priceDiff =
+    lowestRelevantPrice !== null ? product.price - lowestRelevantPrice : 0;
+  const showPriceDiff = isLowestRelevantMatch === false && priceDiff > 0;
 
   return (
     <a
       href={product.link}
       target="_blank"
       rel="noopener noreferrer"
-      className={`group relative flex gap-4 p-4 rounded-xl transition-all duration-200 hover:-translate-y-0.5 ${
-        isBestDeal
-          ? "bg-accent-green border-accent-greenBorderStrong shadow-brand"
-          : "bg-surface-lightCard dark:bg-surface-card border-surface-lightBorder dark:border-surface-border"
-      }`}
+      className="group relative flex gap-4 rounded-xl border border-surface-lightBorder bg-surface-lightCard p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-green dark:border-surface-border dark:bg-surface-card"
     >
-      {/* Best deal badge */}
-      {isBestDeal && (
-        <div className="absolute -top-2.5 left-4 flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-green text-black">
-          <Award size={9} />
-          BEST PRICE
+      {isLowestRelevantMatch && (
+        <div className="absolute left-4 top-[-10px] rounded-full bg-brand-green px-2 py-0.5 text-[10px] font-bold text-black">
+          Lowest Relevant Price
         </div>
       )}
 
-      {/* Rank */}
-      <div className="absolute top-3 right-3 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold font-mono bg-surface-lightHover dark:bg-surface-hover text-brand-muted">
+      <div className="absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-surface-lightHover text-[10px] font-bold font-mono text-brand-muted dark:bg-surface-hover">
         {rank + 1}
       </div>
 
-      {/* Product image */}
-      <div className="w-16 h-16 rounded-lg overflow-hidden shrink-0 flex items-center justify-center bg-surface-lightHover dark:bg-surface-hover">
+      <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-surface-lightHover dark:bg-surface-hover">
         {product.image ? (
           <Image
-            src={product.image}
+            src={buildProxyImageUrl(product.image)}
             alt={product.title}
             width={64}
             height={64}
-            className="object-contain w-full h-full"
-            unoptimized
+            className="h-full w-full object-contain"
           />
         ) : (
-          <div className="text-2xl">📦</div>
+          <div
+            aria-hidden="true"
+            className="text-xl font-mono text-brand-muted"
+          >
+            PH
+          </div>
         )}
       </div>
 
-      {/* Info */}
-      <div className="flex-1 min-w-0 pr-8">
-        <p className="text-sm font-semibold font-display line-clamp-2 leading-snug text-brand-text-light dark:text-brand-text-dark">
+      <div className="min-w-0 flex-1 pr-8">
+        <div className="mb-2 flex flex-wrap items-center gap-2">
+          <span
+            className={`rounded-full border px-2 py-0.5 text-[10px] font-mono uppercase tracking-[0.18em] ${getConfidenceStyles(product.match.confidence)}`}
+          >
+            {getConfidenceLabel(product.match.confidence)}
+          </span>
+          {product.match.isAccessory && (
+            <span className="rounded-full border border-surface-lightBorder px-2 py-0.5 text-[10px] font-mono uppercase tracking-[0.18em] text-brand-muted dark:border-surface-border">
+              Accessory
+            </span>
+          )}
+          {(product.match.isRefurbished || product.match.isUsed) && (
+            <span className="rounded-full border border-surface-lightBorder px-2 py-0.5 text-[10px] font-mono uppercase tracking-[0.18em] text-brand-red dark:border-surface-border">
+              Refurbished / Used
+            </span>
+          )}
+        </div>
+
+        <p className="line-clamp-2 text-sm font-display font-semibold leading-snug text-brand-text-light dark:text-brand-text-dark">
           {product.title}
         </p>
 
-        <p className="text-xs mt-1 font-mono text-brand-muted">
-          {product.store}
-        </p>
+        <div className="mt-1 flex flex-wrap items-center gap-2 text-xs font-mono text-brand-muted">
+          <span>{product.store}</span>
+          {product.match.matchedAttributes.length > 0 && (
+            <span className="inline-flex items-center gap-1">
+              <Tag size={10} />
+              {product.match.matchedAttributes.join(", ")}
+            </span>
+          )}
+          {product.match.penalties.length > 0 && (
+            <span className="inline-flex items-center gap-1 text-brand-red">
+              <ShieldAlert size={10} />
+              {product.match.penalties.join(", ")}
+            </span>
+          )}
+        </div>
 
-        {product.rating && (
-          <div className="flex items-center gap-1 mt-1.5">
-            {[...Array(5)].map((_, i) => (
+        {rating > 0 && (
+          <div className="mt-1.5 flex items-center gap-1">
+            {[...Array(5)].map((_, index) => (
               <Star
-                key={i}
+                key={index}
                 size={9}
-                className={`${
-                  i < Math.round(product.rating!)
-                    ? "text-brand-gold fill-brand-gold"
+                className={
+                  index < Math.round(rating)
+                    ? "fill-brand-gold text-brand-gold"
                     : "text-surface-lightBorder dark:text-surface-border"
-                }`}
+                }
               />
             ))}
             <span className="text-[11px] font-mono text-brand-muted">
-              {product.rating}{" "}
-              {product.reviews ? `(${product.reviews.toLocaleString()})` : ""}
+              {rating}
+              {product.reviews ? ` (${product.reviews.toLocaleString()})` : ""}
             </span>
           </div>
         )}
       </div>
 
-      {/* Price column */}
-      <div className="flex flex-col items-end justify-between shrink-0">
-        <span
-          className={`text-lg font-bold font-mono ${
-            isBestDeal
-              ? "text-brand-green"
-              : "text-brand-text-light dark:text-brand-text-dark"
-          }`}
-        >
+      <div className="flex shrink-0 flex-col items-end justify-between">
+        <span className="text-lg font-bold font-mono text-brand-text-light dark:text-brand-text-dark">
           ${product.price.toFixed(2)}
         </span>
 
-        {isExpensive && (
+        {showPriceDiff && (
           <span className="text-[10px] font-mono text-brand-red">
-            +${priceDiff.toFixed(2)}
+            +${priceDiff.toFixed(2)} vs. best relevant
           </span>
         )}
 
         <ExternalLink
           size={12}
-          className="transition-colors text-surface-border dark:text-surface-border"
+          className="text-surface-border transition-colors group-hover:text-brand-green dark:text-surface-border"
         />
       </div>
     </a>

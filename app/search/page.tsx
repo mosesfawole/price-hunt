@@ -1,11 +1,24 @@
 "use client";
+
 import { useEffect } from "react";
-import { useSearchStore } from "@/store/useSearchStore";
+import { Clock, Sparkles, TrendingDown } from "lucide-react";
 import Navbar from "@/components/ui/Navbar";
 import SearchBar from "@/components/ui/SearchBar";
 import PriceSummary from "@/components/results/PriceSummary";
+import ResultsFilters from "@/components/results/ResultsFilters";
 import ProductGrid from "@/components/results/ProductGrid";
-import { TrendingDown, Clock, X, Sparkles } from "lucide-react";
+import { useSearchStore } from "@/store/useSearchStore";
+
+const POPULAR_SEARCHES = [
+  "Logitech MX Master 3S",
+  "iPhone 15 Pro 256GB",
+  "Samsung S24 Ultra 512GB",
+  "Sony WH-1000XM5",
+  "MacBook Pro M4 14-inch",
+  "Apple Watch Series 10 45mm",
+  "Nintendo Switch OLED",
+  "Kindle Paperwhite 16GB",
+];
 
 export default function SearchPage() {
   const {
@@ -18,116 +31,97 @@ export default function SearchPage() {
     setQuery,
   } = useSearchStore();
 
-  // Apply theme on mount
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDark);
   }, [isDark]);
 
-  const handleHistoryClick = (q: string) => {
-    setQuery(q);
-    search(q);
+  const handleQuickSearch = (value: string) => {
+    setQuery(value);
+    search(value);
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-surface dark:bg-surface-DEFAULT light:bg-surface-light">
+    <div className="flex min-h-screen flex-col bg-surface light:bg-surface-light dark:bg-surface-DEFAULT">
       <Navbar />
 
-      <main className="flex-1 flex flex-col">
-        {/* ── Hero section — shown before search ── */}
+      <main className="flex flex-1 flex-col">
         {!hasSearched && !isLoading && (
-          <div className="flex flex-col items-center justify-center flex-1 px-4 py-16 gap-8">
-            {/* Title */}
-            <div className="text-center space-y-3 animate-slide-up">
-              <div className="flex items-center justify-center gap-2 mb-4">
-                <div className="px-3 py-1 rounded-full text-[11px] font-mono flex items-center gap-1.5 bg-accent-green border border-accent-greenBorder text-brand-green">
+          <div className="flex flex-1 flex-col items-center justify-center gap-8 px-4 py-16">
+            <div className="space-y-3 text-center animate-slide-up">
+              <div className="mb-4 flex items-center justify-center gap-2">
+                <div className="flex items-center gap-1.5 rounded-full border border-accent-greenBorder bg-accent-green px-3 py-1 text-[11px] font-mono text-brand-green">
                   <Sparkles size={10} />
-                  Real-time price comparison
+                  Match-aware shopping results
                 </div>
               </div>
 
-              <h1 className="text-3xl md:text-5xl font-display font-bold leading-tight text-brand-text-light dark:text-brand-text-dark">
-                Find the <span className="text-brand-green">lowest price</span>
-                <br />
-                for anything
+              <h1 className="text-3xl font-display font-bold leading-tight text-brand-text-light dark:text-brand-text-dark md:text-5xl">
+                Compare prices with
+                <span className="text-brand-green"> confidence signals</span>
               </h1>
 
-              <p className="text-sm md:text-base font-mono max-w-md mx-auto text-brand-muted">
-                Search any product and instantly compare prices across multiple
-                retailers — Amazon, Walmart, Best Buy and more
+              <p className="mx-auto max-w-xl text-sm font-mono text-brand-muted md:text-base">
+                Price Hunt reads Google Shopping listings and ranks them by how
+                closely they match your query before showing the cheapest strong
+                options.
               </p>
             </div>
 
-            {/* Search bar */}
             <div className="w-full max-w-2xl px-4 animate-slide-up">
               <SearchBar />
             </div>
+
             <div className="w-full max-w-2xl px-4 animate-fade-in">
-              <div className="flex items-start gap-2 px-4 py-3 rounded-xl text-xs font-mono bg-accent-gold border border-accent-goldBorder text-brand-muted">
-                <span className="text-brand-gold mt-0.5">⚠</span>
-                <span>
-                  Results are aggregated from Google Shopping and may include
-                  accessories or related products alongside the item you
-                  searched for. Always verify the product details before
-                  purchasing.
-                </span>
+              <div className="rounded-xl border border-accent-goldBorder bg-accent-gold px-4 py-3 text-xs font-mono text-brand-muted">
+                Search with enough detail to improve match quality: brand,
+                model, capacity, color, and size help the scoring layer separate
+                exact products from accessories and variants.
               </div>
             </div>
 
-            {/* Recent searches */}
             {history.length > 0 && (
               <div className="w-full max-w-2xl px-4 animate-fade-in">
-                <div className="flex items-center justify-between mb-3">
+                <div className="mb-3 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Clock size={12} className="text-brand-muted" />
-                    <span className="text-[11px] font-mono tracking-widest uppercase text-brand-muted">
+                    <span className="text-[11px] font-mono uppercase tracking-widest text-brand-muted">
                       Recent Searches
                     </span>
                   </div>
                   <button
                     onClick={clearHistory}
-                    className="text-[11px] font-mono transition-colors hover:text-brand-red text-brand-muted"
+                    className="text-[11px] font-mono text-brand-muted transition-colors hover:text-brand-red"
                   >
                     Clear all
                   </button>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                  {history.map((h) => (
+                  {history.map((entry) => (
                     <button
-                      title="title"
-                      key={h.query}
-                      onClick={() => handleHistoryClick(h.query)}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono transition-all bg-surface-lightCard dark:bg-surface-card border border-surface-lightBorder dark:border-surface-border text-brand-text-light dark:text-brand-text-dark hover:border-brand-green"
+                      key={entry.query}
+                      onClick={() => handleQuickSearch(entry.query)}
+                      className="flex items-center gap-2 rounded-lg border border-surface-lightBorder bg-surface-lightCard px-3 py-1.5 text-xs font-mono text-brand-text-light transition-all hover:border-brand-green dark:border-surface-border dark:bg-surface-card dark:text-brand-text-dark"
                     >
                       <TrendingDown size={10} className="text-brand-green" />
-                      {h.query}
-                      <span className="text-brand-muted">{h.resultCount}</span>
+                      {entry.query}
+                      <span className="text-brand-muted">{entry.resultCount}</span>
                     </button>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Popular searches */}
             <div className="w-full max-w-2xl px-4 animate-fade-in">
-              <p className="text-[11px] font-mono tracking-widest uppercase mb-3 text-brand-muted">
+              <p className="mb-3 text-[11px] font-mono uppercase tracking-widest text-brand-muted">
                 Try searching for
               </p>
               <div className="flex flex-wrap gap-2">
-                {[
-                  "Logitech Mouse",
-                  "iPhone 15",
-                  "Samsung TV",
-                  "Nike Air Max",
-                  "MacBook Pro",
-                  "Sony Headphones",
-                  "iPad",
-                  "Gaming Chair",
-                ].map((suggestion) => (
+                {POPULAR_SEARCHES.map((suggestion) => (
                   <button
                     key={suggestion}
-                    onClick={() => handleHistoryClick(suggestion)}
-                    className="px-3 py-1.5 rounded-lg text-xs font-mono transition-all bg-surface-lightCard dark:bg-surface-card border border-surface-lightBorder dark:border-surface-border text-brand-muted hover:text-brand-text-light dark:hover:text-brand-text-dark hover:border-brand-green"
+                    onClick={() => handleQuickSearch(suggestion)}
+                    className="rounded-lg border border-surface-lightBorder bg-surface-lightCard px-3 py-1.5 text-xs font-mono text-brand-muted transition-all hover:border-brand-green hover:text-brand-text-light dark:border-surface-border dark:bg-surface-card dark:hover:text-brand-text-dark"
                   >
                     {suggestion}
                   </button>
@@ -137,25 +131,22 @@ export default function SearchPage() {
           </div>
         )}
 
-        {/* ── Results section — shown after search ── */}
         {(hasSearched || isLoading) && (
-          <div className="flex-1 px-4 md:px-8 py-6 max-w-3xl mx-auto w-full space-y-5">
+          <div className="mx-auto flex-1 w-full max-w-5xl space-y-5 px-4 py-6 md:px-8">
             <SearchBar />
-            {!isLoading && <PriceSummary />}
+            {!isLoading && (
+              <>
+                <PriceSummary />
+                <ResultsFilters />
+              </>
+            )}
             <ProductGrid />
           </div>
         )}
       </main>
-      <footer className="py-6 text-center text-[11px] font-mono text-brand-muted border-t border-surface-lightBorder dark:border-surface-border">
-        © 2026 PriceHunt — Made by{" "}
-        <a
-          href="https://github.com/mosesfawole"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="transition-colors hover:text-brand-text-light dark:hover:text-brand-text-dark text-brand-green"
-        >
-          Moses Fawole
-        </a>
+
+      <footer className="border-t border-surface-lightBorder py-6 text-center text-[11px] font-mono text-brand-muted dark:border-surface-border">
+        Copyright 2026 PriceHunt. Aggregated shopping data for research only.
       </footer>
     </div>
   );

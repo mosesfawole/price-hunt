@@ -1,10 +1,10 @@
 "use client";
 import { useState, useRef } from "react";
-import { Search, X, Clock, ArrowRight } from "lucide-react";
+import { Search, X, Clock } from "lucide-react";
 import { useSearchStore } from "@/store/useSearchStore";
 
 export default function SearchBar() {
-  const { query, setQuery, search, isLoading, history, isDark, clearResults } =
+  const { query, setQuery, search, isLoading, history, clearResults } =
     useSearchStore();
   const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -27,23 +27,20 @@ export default function SearchBar() {
   const showHistory = focused && history.length > 0 && !query.trim();
 
   return (
-    <div className="relative w-full max-w-2xl mx-auto">
+    <div className="relative w-full">
       <form onSubmit={handleSubmit}>
-        <div className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all bg-surface-lightCard dark:bg-surface-card border-2 border-surface-lightBorder dark:border-surface-border focus-within:border-brand-green focus-within:shadow-focus">
-          <Search
-            size={16}
-            className="text-brand-muted focus-within:text-brand-green"
-          />
+        <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 focus-within:border-accent-500 transition-colors">
+          <Search size={18} className="text-gray-400" />
 
           <input
             ref={inputRef}
             type="text"
-            placeholder='Search for a product (e.g. "Logitech Mouse")'
+            placeholder='Search a model, e.g. "iPhone 15 Pro 256GB"'
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => setFocused(true)}
             onBlur={() => setTimeout(() => setFocused(false), 150)}
-            className="flex-1 bg-transparent outline-none text-base md:text-sm text-brand-text-light dark:text-brand-text-dark"
+            className="flex-1 bg-transparent outline-none text-gray-900 dark:text-white placeholder-gray-500"
           />
 
           {query && (
@@ -54,7 +51,7 @@ export default function SearchBar() {
                 setQuery("");
                 clearResults();
               }}
-              className="shrink-0 text-brand-muted"
+              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
             >
               <X size={14} />
             </button>
@@ -63,14 +60,12 @@ export default function SearchBar() {
           <button
             type="submit"
             disabled={isLoading || !query.trim()}
-            className="flex items-center gap-1 px-2 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 disabled:cursor-not-allowed bg-brand-green disabled:bg-surface-lightBorder dark:disabled:bg-surface-border text-black disabled:text-brand-muted"
+            className="px-4 py-2 bg-accent-500 hover:bg-accent-600 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white disabled:text-gray-500 rounded-lg font-medium transition-colors disabled:cursor-not-allowed"
           >
             {isLoading ? (
-              <div className="w-3 h-3 border-2 border-black border-t-transparent rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
             ) : (
-              <>
-                Search <ArrowRight size={12} />
-              </>
+              "Search"
             )}
           </button>
         </div>
@@ -78,19 +73,23 @@ export default function SearchBar() {
 
       {/* Search history dropdown */}
       {showHistory && (
-        <div className="absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden z-20 animate-fade-in bg-surface-lightCard dark:bg-surface-card border border-surface-lightBorder dark:border-surface-border shadow-2xl">
-          <div className="px-4 py-2 text-[10px] font-mono tracking-widest uppercase text-brand-muted">
-            Recent Searches
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-subtle overflow-hidden z-20">
+          <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-700">
+            <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+              Recent searches
+            </span>
           </div>
           {history.map((h) => (
             <button
               key={h.query}
               onClick={() => handleHistoryClick(h.query)}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors text-brand-text-light dark:text-brand-text-dark hover:bg-surface-lightHover dark:hover:bg-surface-hover"
+              className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
-              <Clock size={12} className="text-brand-muted" />
-              <span className="text-sm flex-1">{h.query}</span>
-              <span className="text-[11px] font-mono text-brand-muted">
+              <Clock size={16} className="text-gray-400" />
+              <span className="flex-1 text-gray-700 dark:text-gray-300">
+                {h.query}
+              </span>
+              <span className="text-sm text-gray-400">
                 {h.resultCount} results
               </span>
             </button>

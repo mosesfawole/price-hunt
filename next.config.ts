@@ -3,10 +3,6 @@ import { setDefaultResultOrder } from "dns";
 
 setDefaultResultOrder("ipv4first");
 
-const nextConfig: NextConfig = {
-  images: {
-    remotePatterns: [{ protocol: "https", hostname: "**" }],
-  },
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;

@@ -1,29 +1,58 @@
 "use client";
+
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { Product, SearchHistory } from "@/types";
+import { DEFAULT_SEARCH_FILTERS } from "@/lib/product-matching";
+import type { Product, SearchFilters, SearchHistory, SearchResult } from "@/types";
 
-interface SearchStore {
-  // Current search state
+type SearchStore = {
   query: string;
   results: Product[];
   isLoading: boolean;
   error: string | null;
   isCached: boolean;
   hasSearched: boolean;
-
-  // History
+  fetchedAt: string | null;
+  expiresAt: string | null;
+  searchedAt: string | null;
+  dataSource: string;
+  market: string;
+  currency: string;
+  filters: SearchFilters;
   history: SearchHistory[];
-
-  // Theme
   isDark: boolean;
-
-  // Actions
-  setQuery: (q: string) => void;
-  search: (q: string) => Promise<void>;
+  setQuery: (query: string) => void;
+  search: (query: string) => Promise<void>;
   clearResults: () => void;
   clearHistory: () => void;
   toggleTheme: () => void;
+  updateFilters: (nextFilters: Partial<SearchFilters>) => void;
+  resetFilters: () => void;
+};
+
+const DEFAULT_SOURCE = "Google Shopping via SerpAPI";
+const DEFAULT_MARKET = "US";
+const DEFAULT_CURRENCY = "USD";
+
+function buildHistoryEntry(query: string, results: Product[]): SearchHistory {
+  return {
+    query,
+    searchedAt: new Date().toISOString(),
+    resultCount: results.length,
+  };
+}
+
+function getResponseErrorMessage(data: unknown): string {
+  if (
+    typeof data === "object" &&
+    data !== null &&
+    "error" in data &&
+    typeof data.error === "string"
+  ) {
+    return data.error;
+  }
+
+  return "Search failed.";
 }
 
 export const useSearchStore = create<SearchStore>()(
@@ -35,67 +64,107 @@ export const useSearchStore = create<SearchStore>()(
       error: null,
       isCached: false,
       hasSearched: false,
+      fetchedAt: null,
+      expiresAt: null,
+      searchedAt: null,
+      dataSource: DEFAULT_SOURCE,
+      market: DEFAULT_MARKET,
+      currency: DEFAULT_CURRENCY,
+      filters: DEFAULT_SEARCH_FILTERS,
       history: [],
       isDark: true,
 
       setQuery: (query) => set({ query }),
 
       search: async (query) => {
-        if (!query.trim()) return;
+        const trimmedQuery = query.trim();
+        if (!trimmedQuery) return;
 
         set({ isLoading: true, error: null, hasSearched: false });
 
         try {
           const res = await fetch(
-            `/api/search?q=${encodeURIComponent(query.trim())}`,
+            `/api/search?q=${encodeURIComponent(trimmedQuery)}`,
           );
-          const data = await res.json();
+          const data = (await res.json()) as SearchResult | { error: string };
 
-          if (!res.ok) throw new Error(data.error ?? "Search failed");
+          if (!res.ok) {
+            throw new Error(getResponseErrorMessage(data));
+          }
 
-          // Sort by price ascending — cheapest first
-          const sorted = [...data.results].sort((a, b) => a.price - b.price);
+          const searchResult = data as SearchResult;
 
           set({
-            results: sorted,
-            isCached: data.cached,
+            results: searchResult.results,
+            isCached: searchResult.cached,
             hasSearched: true,
-            query: query.trim(),
-            // Add to history, avoid duplicates, keep last 8
+            query: trimmedQuery,
+            fetchedAt: searchResult.fetchedAt,
+            expiresAt: searchResult.expiresAt,
+            searchedAt: searchResult.searchedAt,
+            dataSource: searchResult.dataSource,
+            market: searchResult.market,
+            currency: searchResult.currency,
             history: [
-              {
-                query: query.trim(),
-                searchedAt: new Date().toISOString(),
-                resultCount: sorted.length,
-              },
+              buildHistoryEntry(trimmedQuery, searchResult.results),
               ...get().history.filter(
-                (h) => h.query.toLowerCase() !== query.trim().toLowerCase(),
+                (entry) => entry.query.toLowerCase() !== trimmedQuery.toLowerCase(),
               ),
             ].slice(0, 8),
           });
-        } catch (err: any) {
-          set({ error: err.message, hasSearched: true });
+        } catch (error) {
+          set({
+            error:
+              error instanceof Error
+                ? error.message
+                : "Search failed. Please try again.",
+            hasSearched: true,
+          });
         } finally {
           set({ isLoading: false });
         }
       },
 
       clearResults: () =>
-        set({ results: [], error: null, hasSearched: false, query: "" }),
+        set({
+          results: [],
+          error: null,
+          hasSearched: false,
+          query: "",
+          isCached: false,
+          fetchedAt: null,
+          expiresAt: null,
+          searchedAt: null,
+          dataSource: DEFAULT_SOURCE,
+          market: DEFAULT_MARKET,
+          currency: DEFAULT_CURRENCY,
+        }),
 
       clearHistory: () => set({ history: [] }),
 
       toggleTheme: () => {
         const next = !get().isDark;
         set({ isDark: next });
-        // Apply to html element for Tailwind dark mode
         document.documentElement.classList.toggle("dark", next);
       },
+
+      updateFilters: (nextFilters) =>
+        set((state) => ({
+          filters: {
+            ...state.filters,
+            ...nextFilters,
+          },
+        })),
+
+      resetFilters: () => set({ filters: DEFAULT_SEARCH_FILTERS }),
     }),
     {
       name: "price-hunt-storage",
-      // Only persist history and theme — not search results
-      partialize: (s) => ({ history: s.history, isDark: s.isDark }),
+      partialize: (state) => ({
+        history: state.history,
+        isDark: state.isDark,
+        filters: state.filters,
+      }),
     },
   ),
 );

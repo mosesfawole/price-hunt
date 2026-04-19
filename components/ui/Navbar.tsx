@@ -1,30 +1,29 @@
 "use client";
+
 import { TrendingUp } from "lucide-react";
 import { useSearchStore } from "@/store/useSearchStore";
 import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar() {
-  const { isDark, clearResults } = useSearchStore();
+  const { clearResults } = useSearchStore();
 
   return (
-    <nav className="h-14 flex items-center px-4 md:px-8 gap-3 shrink-0 sticky top-0 z-30 bg-surface-light dark:bg-surface-card border-b border-surface-lightBorder dark:border-surface-border">
-      {/* Logo */}
+    <nav className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b border-surface-lightBorder bg-surface-light px-4 dark:border-surface-border dark:bg-surface-card md:px-8">
       <button
         onClick={clearResults}
-        className="flex items-center gap-2 shrink-0 cursor-pointer"
+        className="flex shrink-0 items-center gap-2"
       >
-        <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-accent-green border border-accent-greenBorder">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-accent-greenBorder bg-accent-green">
           <TrendingUp size={14} className="text-brand-green" />
         </div>
-        <span className="font-display font-bold tracking-tight text-sm text-brand-text-light dark:text-brand-text-dark">
+        <span className="text-sm font-display font-bold tracking-tight text-brand-text-light dark:text-brand-text-dark">
           Price<span className="text-brand-green">Hunt</span>
         </span>
       </button>
 
-      {/* Right side */}
       <div className="ml-auto flex items-center gap-3">
-        <span className="hidden sm:block text-xs font-mono text-brand-muted">
-          Compare prices instantly
+        <span className="hidden text-xs font-mono text-brand-muted sm:block">
+          Google Shopping price snapshots
         </span>
         <ThemeToggle />
       </div>
